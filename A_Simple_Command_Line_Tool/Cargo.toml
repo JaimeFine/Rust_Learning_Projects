@@ -1,0 +1,6 @@
+[package]
+name = "A_Simple_Command_Line_Tool"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
