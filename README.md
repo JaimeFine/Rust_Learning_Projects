@@ -6,7 +6,7 @@ This repository contains a collection of Rust-based projects created and modifie
 
 ## Projects
 
-- Bettergrep
+1. Bettergrep
 
 > *More might be added in the future*
 
