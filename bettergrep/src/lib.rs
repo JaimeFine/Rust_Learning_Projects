@@ -24,7 +24,7 @@ impl Config {
         let mut ignore_case = false;
 
         if let Some(arg) = args.next() {
-            if arg == "--ignore_case" {
+            if arg == "--ignore-case" {
                 ignore_case = true;
             }
         }
