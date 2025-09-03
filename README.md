@@ -10,12 +10,12 @@ This repository contains a collection of Rust-based projects created and modifie
 
 > *More might be added in the future*
 
-## Licensing
+## Licensing and Attribution
 
-This repository contains projects based on:
+This repository contains projects and code snippets based on the following works, and are used here under their respective licenses:
 
-- *The Rust Programming Language* (CC BY-NC-SA 4.0): https://creativecommons.org/licenses/by-nc-sa/4.0/
-- *Creative Projects for Rust Programmers* (MIT License): https://opensource.org/licenses/MIT
+- The Rust Programming Language is licensed under a dual-license of Apache 2.0 and MIT. The book's content is also available under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
 
-My original contributions are released under the MIT License unless otherwise noted.
-Each project folder includes its own license and attribution where applicable.
+- Creative Projects for Rust Programmers is licensed under the MIT License.
+
+My original code contributions are released under the MIT License unless otherwise noted. Each project folder includes its own license and attribution where applicable.
