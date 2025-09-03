@@ -8,7 +8,7 @@ This repository contains a collection of Rust-based projects created and modifie
 
 1. Bettergrep
 
-> *More might be added in the future*
+> *More projects will be added in the future*
 
 ## Licensing and Attribution
 
