@@ -1,5 +1,5 @@
 [package]
-name = "A_Simple_Command_Line_Tool"
+name = "bettergrep"
 version = "0.1.0"
 edition = "2021"
 
