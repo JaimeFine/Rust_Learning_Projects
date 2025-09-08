@@ -1,2 +1,3 @@
-/target/
-/Cargo.lock
+bettergrep/target/
+bettergrep/Cargo.lock
+testrust/
