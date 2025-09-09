@@ -65,7 +65,7 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
         .enumerate()
         .filter(|(_, word)| word.contains(query))
         .count() as i64;
-    println!("There is total {} in the file:", words_number);
+    println!("There is total {} {} in the file:", words_number, query);
     contents
         .lines()
         .enumerate()
@@ -76,6 +76,13 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
     let query_lower = query.to_lowercase();
+    let words: Vec<&str> = contents.split_whitespace().collect();
+    let words_number: i64 = words
+        .iter()
+        .enumerate()
+        .filter(|(_, word)| word.to_lowercase().contains(query))
+        .count() as i64;
+    println!("There is total {} {} in the file:", words_number, query);
     contents
         .lines()
         .enumerate()
