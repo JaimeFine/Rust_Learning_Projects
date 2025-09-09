@@ -8,6 +8,13 @@ pub struct Config {
     pub ignore_case: bool,
 }
 
+pub enum SearchMeathod {
+    Normal,
+    CaseInsensitiveNormal,
+    Strict,
+    CaseInsensitiveStrict,
+}
+
 impl Config {
     pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
         args.next();
@@ -59,76 +66,43 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn search<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
+fn search_generic<'a, F>(query: &str, contents: &'a str, filter_func: F) -> Vec<(usize, &'a str)>
+where
+    F: Fn(&str) -> bool,
+{
     let words: Vec<&str> = contents.split_whitespace().collect();
     let words_number: u64 = words
         .iter()
-        .enumerate()
-        .filter(|(_, word)| word.contains(query))
+        .filter(|&word| filter_func(word))
         .count() as u64;
-    println!("There is total {} {} in the file:", words_number, query);
+    println!("There is a total of {} '{}' in the file:", words_number, query);
 
     contents
         .lines()
         .enumerate()
-        .filter(|(_, line)| line.contains(query))
+        .filter(|(_, line)| filter_func(line))
         .map(|(i, line)| (i + 1, line))
         .collect()
+}
+
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
+    search_generic(query, contents, |text| text.contains(query))
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
     let query_lower = query.to_lowercase();
-    let words: Vec<&str> = contents.split_whitespace().collect();
-    let words_number: u64 = words
-        .iter()
-        .enumerate()
-        .filter(|(_, word)| word.to_lowercase().contains(query))
-        .count() as u64;
-    println!("There is total {} {} in the file:", words_number, query);
-
-    contents
-        .lines()
-        .enumerate()
-        .filter(|(_, line)| line.to_lowercase().contains(&query_lower))
-        .map(|(i, line)| (i + 1, line))
-        .collect()
+    search_generic(query, contents, |text| text.to_lowercase().contains(&query_lower))
 }
 
 pub fn search_strict<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
     let re = Regex::new(&format!(r"\b{}\b", regex::escape(query))).unwrap();
-    let words: Vec<&str> = contents.split_whitespace().collect();
-    let words_number: u64 = words
-        .iter()
-        .enumerate()
-        .filter(|(_, word)| re.is_match(word))
-        .count() as u64;
-    println!("There is total {} {} in the file:", words_number, query);
-
-    contents
-        .lines()
-        .enumerate()
-        .filter(|(_, line)| re.is_match(line))
-        .map(|(i, line)| (i + 1, line))
-        .collect()
+    search_generic(query, contents, |text| re.is_match(text))
 }
 
 pub fn search_case_insensitive_strict<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
     let query_lower = query.to_lowercase();
     let re = Regex::new(&format!(r"\b{}\b", regex::escape(&query_lower))).unwrap();
-    let words: Vec<&str> = contents.split_whitespace().collect();
-    let words_number: u64 = words
-        .iter()
-        .enumerate()
-        .filter(|(_, word)| re.is_match(&word.to_lowercase()))
-        .count() as u64;
-    println!("There is total {} {} in the file:", words_number, query);
-
-    contents
-        .lines()
-        .enumerate()
-        .filter(|(_, line)| re.is_match(&line.to_lowercase()))
-        .map(|(i, line)| (i + 1, line))
-        .collect()
+    search_generic(query, contents, |text| re.is_match(&text.to_lowercase()))
 }
 
 #[cfg(test)]
