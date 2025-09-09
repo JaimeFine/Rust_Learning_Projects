@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fs;
+use regex::Regex;
 
 pub struct Config {
     pub query: String,
@@ -60,12 +61,13 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
     let words: Vec<&str> = contents.split_whitespace().collect();
-    let words_number: i64 = words
+    let words_number: u64 = words
         .iter()
         .enumerate()
         .filter(|(_, word)| word.contains(query))
-        .count() as i64;
+        .count() as u64;
     println!("There is total {} {} in the file:", words_number, query);
+
     contents
         .lines()
         .enumerate()
@@ -77,16 +79,54 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
     let query_lower = query.to_lowercase();
     let words: Vec<&str> = contents.split_whitespace().collect();
-    let words_number: i64 = words
+    let words_number: u64 = words
         .iter()
         .enumerate()
         .filter(|(_, word)| word.to_lowercase().contains(query))
-        .count() as i64;
+        .count() as u64;
     println!("There is total {} {} in the file:", words_number, query);
+
     contents
         .lines()
         .enumerate()
         .filter(|(_, line)| line.to_lowercase().contains(&query_lower))
+        .map(|(i, line)| (i + 1, line))
+        .collect()
+}
+
+pub fn search_strict<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
+    let re = Regex::new(&format!(r"\b{}\b", regex::escape(query))).unwrap();
+    let words: Vec<&str> = contents.split_whitespace().collect();
+    let words_number: u64 = words
+        .iter()
+        .enumerate()
+        .filter(|(_, word)| re.is_match(word))
+        .count() as u64;
+    println!("There is total {} {} in the file:", words_number, query);
+
+    contents
+        .lines()
+        .enumerate()
+        .filter(|(_, line)| re.is_match(line))
+        .map(|(i, line)| (i + 1, line))
+        .collect()
+}
+
+pub fn search_case_insensitive_strict<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
+    let query_lower = query.to_lowercase();
+    let re = Regex::new(&format!(r"\b{}\b", regex::escape(&query_lower))).unwrap();
+    let words: Vec<&str> = contents.split_whitespace().collect();
+    let words_number: u64 = words
+        .iter()
+        .enumerate()
+        .filter(|(_, word)| re.is_match(&word.to_lowercase()))
+        .count() as u64;
+    println!("There is total {} {} in the file:", words_number, query);
+
+    contents
+        .lines()
+        .enumerate()
+        .filter(|(_, line)| re.is_match(&line.to_lowercase()))
         .map(|(i, line)| (i + 1, line))
         .collect()
 }
@@ -96,7 +136,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn one_result() {
+    fn normal_search_test() {
         let query = "duct";
         let contents = "\
 Rust:
@@ -106,7 +146,7 @@ Pick three.";
     }
 
     #[test]
-    fn case_insensitive() {
+    fn case_insensitive_search_test() {
         let query = "rUsT";
         let contents = "\
 Rust:
@@ -116,6 +156,34 @@ Trust me.";
         assert_eq!(
             vec![(1, "Rust:"), (4, "Trust me.")],
             search_case_insensitive(query, contents)
+        );
+    }
+
+    #[test]
+    fn search_strict_test() {
+        let query = "duct";
+        let contents = "\
+Rust:\
+safe, fast, productive.\
+Pick three, no duct.\
+Hell yes!";
+        assert_eq!(
+            vec![(3, "Pick three, no duct.")],
+            search_strict(query, contents)
+        );
+    }
+
+    #[test]
+    fn search_case_insensitive_strict_test() {
+        let query = "rUsT";
+        let contents = "\
+Rust:\
+safe, fast, productive.\
+Pick three, no rust.\
+Trust me!";
+        assert_eq!(
+            vec![(1, "Rust:"), (3, "Pick three, no rust.")],
+            search_case_insensitive_strict(query, contents)
         );
     }
 }
