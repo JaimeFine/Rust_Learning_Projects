@@ -2,17 +2,17 @@ use std::error::Error;
 use std::fs;
 use regex::Regex;
 
-pub struct Config {
-    pub query: String,
-    pub file_path: String,
-    pub ignore_case: bool,
-}
-
-pub enum SearchMeathod {
+pub enum SearchMethod {
     Normal,
     CaseInsensitiveNormal,
     Strict,
     CaseInsensitiveStrict,
+}
+
+pub struct Config {
+    pub query: String,
+    pub file_path: String,
+    pub search_method: SearchMethod,
 }
 
 impl Config {
@@ -30,17 +30,27 @@ impl Config {
         };
 
         let mut ignore_case = false;
+        let mut strict = false;
 
         if let Some(arg) = args.next() {
-            if arg == "--ignore-case" {
-                ignore_case = true;
+            match arg.as_str() {
+                "--strict" => strict = true,
+                "--ignore-case" => ignore_case = true,
+                _ => return Err("Unexpected argument given"),
             }
         }
+
+        let search_method = match (strict, ignore_case) {
+            (true, true) => SearchMethod::CaseInsensitiveStrict,
+            (true, false) => SearchMethod::Strict,
+            (false, true) => SearchMethod::CaseInsensitiveNormal,
+            (false, false) => SearchMethod::Normal,
+        };
 
         Ok(Config {
             query,
             file_path,
-            ignore_case,
+            search_method,
         })
     }
 }
@@ -48,10 +58,19 @@ impl Config {
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
 
-    let results = if config.ignore_case {
-        search_case_insensitive(&config.query, &contents)
-    } else {
-        search(&config.query, &contents)
+    let results = match config.search_method {
+        SearchMethod::Normal => {
+            search(&contents, &config.query)
+        },
+        SearchMethod::Strict => {
+            search_strict(&contents, &config.query)
+        },
+        SearchMethod::CaseInsensitiveNormal => {
+            search_case_insensitive(&contents, &config.query)
+        },
+        SearchMethod::CaseInsensitiveStrict => {
+            search_case_insensitive_strict(&contents, &config.query)
+        },
     };
 
     if results.is_empty() {
@@ -68,6 +87,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
 fn search_generic<'a, F>(query: &str, contents: &'a str, filter_func: F) -> Vec<(usize, &'a str)>
 where
+    // Returning a bool because filter_func tells us whether to keep or discard the current item:
     F: Fn(&str) -> bool,
 {
     let words: Vec<&str> = contents.split_whitespace().collect();
