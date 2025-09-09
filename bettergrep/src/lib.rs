@@ -32,7 +32,7 @@ impl Config {
         let mut ignore_case = false;
         let mut strict = false;
 
-        if let Some(arg) = args.next() {
+        while let Some(arg) = args.next() {
             match arg.as_str() {
                 "--strict" => strict = true,
                 "--ignore_case" => ignore_case = true,
@@ -60,16 +60,16 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
     let results = match config.search_method {
         SearchMethod::Normal => {
-            search(&contents, &config.query)
+            search(&config.query, &contents)
         },
         SearchMethod::Strict => {
-            search_strict(&contents, &config.query)
+            search_strict(&config.query, &contents)
         },
         SearchMethod::CaseInsensitiveNormal => {
-            search_case_insensitive(&contents, &config.query)
+            search_case_insensitive(&config.query, &contents)
         },
         SearchMethod::CaseInsensitiveStrict => {
-            search_case_insensitive_strict(&contents, &config.query)
+            search_case_insensitive_strict(&config.query, &contents)
         },
     };
 
@@ -115,13 +115,15 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<(usize
 }
 
 pub fn search_strict<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
-    let re = Regex::new(&format!(r"\b{}\b", regex::escape(query))).unwrap();
+    let pattern = format!(r"(^|\s)({})(\s|$)", regex::escape(query));
+    let re = Regex::new(&pattern).unwrap();
     search_generic(query, contents, |text| re.is_match(text))
 }
 
 pub fn search_case_insensitive_strict<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
     let query_lower = query.to_lowercase();
-    let re = Regex::new(&format!(r"\b{}\b", regex::escape(&query_lower))).unwrap();
+    let pattern = format!(r"(^|\s)({})(\s|$)", regex::escape(&query_lower));
+    let re = Regex::new(&pattern).unwrap();
     search_generic(query, contents, |text| re.is_match(&text.to_lowercase()))
 }
 

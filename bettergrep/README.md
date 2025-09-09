@@ -9,7 +9,7 @@ This project is an extended version of the minigrep example from The Rust Progra
 
 - **Case-Insensitive Search:** Use a command-line flag to perform a search that ignores case.
 
-- **Strict Search:** Finding the query as a independent word.
+- **Strict Search:** Find a query as a whole word, not as a substring within a larger word.
 
 - **Line Numbering:** Each matching line is prefixed with its corresponding line number, making it easy to locate results in the file.
 
@@ -43,7 +43,7 @@ cargo run <query> <file_path> [options]
 | --ignore_case	| Performs a case-insensitive search |
 | --strict | Performs a strict search |
 
-> Notice that the suffix arguments are all parallel!
+> Notice that the command-line option arguments are all parallel!
 
 ## Examples
 
