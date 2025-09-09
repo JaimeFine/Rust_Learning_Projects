@@ -35,7 +35,7 @@ impl Config {
         if let Some(arg) = args.next() {
             match arg.as_str() {
                 "--strict" => strict = true,
-                "--ignore-case" => ignore_case = true,
+                "--ignore_case" => ignore_case = true,
                 _ => return Err("Unexpected argument given"),
             }
         }
