@@ -163,9 +163,9 @@ Trust me.";
     fn search_strict_test() {
         let query = "duct";
         let contents = "\
-Rust:\
-safe, fast, productive.\
-Pick three, no duct.\
+Rust:
+safe, fast, productive.
+Pick three, no duct.
 Hell yes!";
         assert_eq!(
             vec![(3, "Pick three, no duct.")],
@@ -177,9 +177,9 @@ Hell yes!";
     fn search_case_insensitive_strict_test() {
         let query = "rUsT";
         let contents = "\
-Rust:\
-safe, fast, productive.\
-Pick three, no rust.\
+Rust:
+safe, fast, productive.
+Pick three, no rust.
 Trust me!";
         assert_eq!(
             vec![(1, "Rust:"), (3, "Pick three, no rust.")],
