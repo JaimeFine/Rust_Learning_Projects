@@ -1,3 +1,4 @@
 bettergrep/target/
 bettergrep/Cargo.lock
+bettergrep/.idea/
 testrust/

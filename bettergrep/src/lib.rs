@@ -59,6 +59,13 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
+    let words: Vec<&str> = contents.split_whitespace().collect();
+    let words_number: i64 = words
+        .iter()
+        .enumerate()
+        .filter(|(_, word)| word.contains(query))
+        .count() as i64;
+    println!("There is total {} in the file:", words_number);
     contents
         .lines()
         .enumerate()
