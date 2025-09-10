@@ -3,6 +3,8 @@
 A command-line file search tool written in Rust, inspired by the grep utility.
 This project is an extended version of the minigrep example from The Rust Programming Language book, with added features for enhanced usability.
 
+> To take a look at the original minigrep, please visit: [The Rust Programming Language](https://doc.rust-lang.org/book/ch12-00-an-io-project.html)
+
 -----
 
 ## Features
