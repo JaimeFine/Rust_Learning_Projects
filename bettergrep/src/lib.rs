@@ -57,19 +57,20 @@ impl Config {
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
+    let cleaned_contents = clean_text(&contents);
 
     let results = match config.search_method {
         SearchMethod::Normal => {
-            search(&config.query, &contents)
+            search(&config.query, &cleaned_contents)
         },
         SearchMethod::Strict => {
-            search_strict(&config.query, &contents)
+            search_strict(&config.query, &cleaned_contents)
         },
         SearchMethod::CaseInsensitiveNormal => {
-            search_case_insensitive(&config.query, &contents)
+            search_case_insensitive(&config.query, &cleaned_contents)
         },
         SearchMethod::CaseInsensitiveStrict => {
-            search_case_insensitive_strict(&config.query, &contents)
+            search_case_insensitive_strict(&config.query, &cleaned_contents)
         },
     };
 
@@ -83,6 +84,19 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     }
 
     Ok(())
+}
+
+fn clean_text(text: &str) -> String {
+    let mut cleaned_text = String::new();
+    for c in text.chars() {
+        if c.is_alphanumeric() || c.is_whitespace() {
+            cleaned_text.push(c);
+        } else {
+            cleaned_text.push(' ');
+        }
+    }
+
+    cleaned_text
 }
 
 fn search_generic<'a, F>(query: &str, contents: &'a str, filter_func: F) -> Vec<(usize, &'a str)>
@@ -115,14 +129,14 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<(usize
 }
 
 pub fn search_strict<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
-    let pattern = format!(r"(^|\s)({})(\s|$)", regex::escape(query));
+    let pattern = format!(r"(?i)\b{}\b", regex::escape(query));
     let re = Regex::new(&pattern).unwrap();
     search_generic(query, contents, |text| re.is_match(text))
 }
 
 pub fn search_case_insensitive_strict<'a>(query: &str, contents: &'a str) -> Vec<(usize, &'a str)> {
     let query_lower = query.to_lowercase();
-    let pattern = format!(r"(^|\s)({})(\s|$)", regex::escape(&query_lower));
+    let pattern = format!(r"(?i)\b{}\b", regex::escape(&query_lower));
     let re = Regex::new(&pattern).unwrap();
     search_generic(query, contents, |text| re.is_match(&text.to_lowercase()))
 }
