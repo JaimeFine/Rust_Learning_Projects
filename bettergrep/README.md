@@ -109,28 +109,28 @@ cargo run rUst poem.txt --strict --ignore_case
 
 - **Original minigrep:** Supports only two search modes: a basic, case-sensitive search and a basic, case-insensitive search.
 
-- **The bettergrep:** Adds two completely new search modes: a strict, whole-word search and a case-insensitive strict search. This is a major usability improvement. Your program also includes a word count for the query, a feature not in the original.
+- **The bettergrep:** Adds two completely new search modes: a strict, whole-word search and a case-insensitive strict search. This is a major usability improvement. The program also includes a word count for the query, a feature not included in the original.
 
 ### Argument Handling
 
 - **Original minigrep:** The case-insensitive flag is handled by checking a separate environment variable (CASE_INSENSITIVE). This works but isn't as common or intuitive for users as command-line flags.
 
-- **The bettergrep:** All options are handled directly through standard command-line flags (--strict and --ignore-case). This is a much more idiomatic and user-friendly approach for command-line tools. Your use of a while let loop to process all optional flags is robust and professional.
+- **The bettergrep:** All options are handled directly through standard command-line flags (--strict and --ignore-case). This is a much more idiomatic and user-friendly approach for command-line tools.
 
 ### Code Structure and Design
 
 - **Original minigrep:** The program has two separate search functions (search and search_case_insensitive), which leads to some code duplication.
 
-- **The bettergrep:** You introduced a generic search_generic function that takes a closure. This is a key design improvement that shows a deep understanding of functional programming in Rust. It eliminates duplicated code and makes the program more flexible and easier to maintain. You also use a SearchMethod enum to handle the different search types in a clean and type-safe way.
+- **The bettergrep:** Introduced a generic search_generic function that takes a closure. It eliminates duplicated code and makes the program more flexible and easier to maintain. There is also a SearchMethod enum to handle the different search types in a clean and type-safe way.
 
 ### Dependencies
 
 - **Original minigrep:** The program uses only the Rust standard library.
 
-- **The bettergrep:** You correctly identified that a "strict" search is best handled by a regular expression library and integrated the regex crate. This is a smart choice that allows you to leverage a powerful tool for a specific problem.
+- **The bettergrep:** Correctly identified that a "strict" search is best handled by a regular expression library and integrated the regex crate.
 
 ### Punctuation Handling
 
 - **Original minigrep:** It does not handle punctuation well for whole-word matching (since it doesn't have this feature).
 
-- **The bettergrep:** You correctly diagnosed the issue with punctuation and implemented a clean_text helper function to handle it. This shows excellent problem-solving skills and attention to detail.
+- **The bettergrep:** Correctly diagnosed the issue with punctuation and implemented a clean_text helper function to handle it.
