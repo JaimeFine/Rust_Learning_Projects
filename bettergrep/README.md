@@ -93,3 +93,35 @@ cargo run rUst poem.txt --ignore_case --strict
 cargo run rUst poem.txt --strict --ignore_case
 
 ```
+
+## Comparing with the Original minigrep Program in the Rust Book
+
+### Functionality and Features
+
+| Original minigrep | Supports only two search modes: a basic, case-sensitive search and a basic, case-insensitive search.
+
+| Your bettergrep | Adds two completely new search modes: a strict, whole-word search and a case-insensitive strict search. This is a major usability improvement. Your program also includes a word count for the query, a feature not in the original.
+
+### Argument Handling
+
+| Original minigrep | The case-insensitive flag is handled by checking a separate environment variable (CASE_INSENSITIVE). This works but isn't as common or intuitive for users as command-line flags.
+
+| Your bettergrep | All options are handled directly through standard command-line flags (--strict and --ignore-case). This is a much more idiomatic and user-friendly approach for command-line tools. Your use of a while let loop to process all optional flags is robust and professional.
+
+### Code Structure and Design
+
+| Original minigrep | The program has two separate search functions (search and search_case_insensitive), which leads to some code duplication.
+
+| Your bettergrep | You introduced a generic search_generic function that takes a closure. This is a key design improvement that shows a deep understanding of functional programming in Rust. It eliminates duplicated code and makes the program more flexible and easier to maintain. You also use a SearchMethod enum to handle the different search types in a clean and type-safe way.
+
+### Dependencies
+
+| Original minigrep | The program uses only the Rust standard library.
+
+| Your bettergrep | You correctly identified that a "strict" search is best handled by a regular expression library and integrated the regex crate. This is a smart choice that allows you to leverage a powerful tool for a specific problem.
+
+### Punctuation Handling
+
+| Original minigrep | It does not handle punctuation well for whole-word matching (since it doesn't have this feature).
+
+| Your bettergrep | You correctly diagnosed the issue with punctuation and implemented a clean_text helper function to handle it. This shows excellent problem-solving skills and attention to detail.
