@@ -45,7 +45,7 @@ impl Drop for ThreadPool {
     fn drop(&mut self) {
         drop(self.sender.take());
 
-        for worker in self.worker.drain(..) {
+        for worker in self.workers.drain(..) {
             println!("Shutting down worker {}", worker.id);
 
             worker.thread.join().unwrap();
@@ -62,7 +62,7 @@ impl Worker {
     fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
         let thread = thread::spawn(move || {
             loop {
-                let message = receiver.lock().unwrap().recv().unwrap();
+                let message = receiver.lock().unwrap().recv();
 
                 match message {
                     Ok(job) => {
