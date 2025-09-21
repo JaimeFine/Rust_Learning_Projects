@@ -1,3 +1,4 @@
+use miniserver::ThreadPool;
 use std::{
     fs,
     io::{BufReader, prelude::*},
@@ -5,8 +6,6 @@ use std::{
     thread,
     time::Duration,
 };
-
-use miniserver::ThreadPool;
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
@@ -44,5 +43,4 @@ fn handle_connection(mut stream: TcpStream) {
     );
 
     stream.write_all(response.as_bytes()).unwrap();
-
 }
