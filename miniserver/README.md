@@ -22,6 +22,7 @@ A simple multithreaded HTTP server in Rust that demonstrates building a custom t
 
 ## 📂 Project structure
 
+```text
 .
 ├── src
 │   ├── lib.rs      # ThreadPool and Worker implementation
@@ -29,6 +30,7 @@ A simple multithreaded HTTP server in Rust that demonstrates building a custom t
 ├── hello.html      # Example HTML page served at "/"
 ├── 404.html        # Example 404 error page
 └── Cargo.toml
+```
 
 -----
 
