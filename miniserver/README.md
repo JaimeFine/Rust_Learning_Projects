@@ -105,6 +105,3 @@ curl [http://127.0.0.1:7878/unknown](http://127.0.0.1:7878/unknown)
 
   * Rust Book, Chapter 20: Building a Multithreaded Web Server
       * [https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html](https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html)
-
-<!-- end list -->
-
