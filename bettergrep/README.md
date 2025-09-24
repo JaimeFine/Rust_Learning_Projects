@@ -7,7 +7,7 @@ This project is an extended version of the minigrep example from The Rust Progra
 
 -----
 
-## Features
+## ✨ Features
 
 - **Normal Search:** Find lines containing a specified query.
 
@@ -21,7 +21,20 @@ This project is an extended version of the minigrep example from The Rust Progra
 
 -----
 
-## Usage
+## 📂 Project structure
+
+```text
+.
+├── src
+│   ├── lib.rs      # Functionality code file
+│   └── main.rs     # Main code file
+├── text.txt        # Example text file      
+└── Cargo.toml
+```
+
+-----
+
+## 🚀 Getting started
 
 ### Prerequisites
 
@@ -66,7 +79,7 @@ cargo run <query> <file_path> [options]
 
 -----
 
-## Examples
+## 🧪 Examples
 
 ### Standard Search
 
@@ -117,7 +130,7 @@ cargo run rUst poem.txt --strict --ignore_case
 
 -----
 
-## Comparing with the Original minigrep Program in the Rust Book
+## 📖 Comparing with the Original minigrep Program in the Rust Book
 
 ### Functionality and Features
 
