@@ -25,7 +25,19 @@ This project is an extended version of the minigrep example from The Rust Progra
 
 ### Prerequisites
 
-To build and run this project, you need to have Rust and Cargo installed on your system. You can get them from rustup.rs.
+  * **Rust (latest stable):** [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
+
+### Build the Program
+
+```bash
+# Clone and enter the project
+git clone [https://github.com/JaimeFine/Rust_Learning_Projects/bettergrep.git](https://github.com/JaimeFine/Rust_Learning_Projects/bettergrep.git)
+cd bettergrep
+
+# Run the server
+cargo run
+```
+
 
 ### Running the Program
 

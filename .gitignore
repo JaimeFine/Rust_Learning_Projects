@@ -1,4 +1,4 @@
-bettergrep/target/
-bettergrep/Cargo.lock
-bettergrep/.idea/
+*/target/
+*/Cargo.lock
+*/.idea/
 testrust/
