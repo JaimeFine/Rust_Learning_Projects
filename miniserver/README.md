@@ -44,7 +44,7 @@ A simple multithreaded HTTP server in Rust that demonstrates building a custom t
 
 ```bash
 # Clone and enter the project
-git clone [https://github.com/yourusername/miniserver.git](https://github.com/yourusername/miniserver.git)
+git clone [https://github.com/JaimeFine/Rust_Learning_Projects/miniserver.git](https://github.com/JaimeFine/Rust_Learning_Projects/miniserver.git)
 cd miniserver
 
 # Run the server
