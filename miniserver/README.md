@@ -28,10 +28,10 @@ A simple, minimal HTTP server that handles incoming requests concurrently using 
 ```text
 .
 ├── src
+│   ├── hello.html  # Example HTML page served at "/"
+│   ├── 404.html    # Example 404 error page
 │   ├── lib.rs      # ThreadPool and Worker implementation
 │   └── main.rs     # HTTP server using the ThreadPool
-├── hello.html      # Example HTML page served at "/"
-├── 404.html        # Example 404 error page
 └── Cargo.toml
 ```
 
