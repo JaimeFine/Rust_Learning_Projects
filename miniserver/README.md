@@ -1,6 +1,5 @@
 ### README.md
 
-````markdown
 # MiniServer with ThreadPool in Rust
 
 A simple multithreaded HTTP server in Rust that demonstrates building a custom thread pool and handling TCP connections concurrently.
@@ -107,4 +106,3 @@ curl -X POST [http://127.0.0.1:7878/](http://127.0.0.1:7878/)
 
   * Rust Book, Chapter 20: Building a Multithreaded Web Server
       * [https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html](https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html)
-
