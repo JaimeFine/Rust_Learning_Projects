@@ -5,10 +5,15 @@ use std::{
 
 pub struct ThreadPool {
     workers: Vec<Worker>,
-    sender: Option<mpsc::Sender<Job>>,
+    sender: mpsc::Sender<Message>,
 }
 
 type Job = Box<dyn FnOnce() + Send + 'static>;
+
+enum Message {
+    NewJob(Job),
+    Terminate,
+}
 
 impl ThreadPool {
     pub fn new(size: usize) -> ThreadPool {
@@ -24,26 +29,27 @@ impl ThreadPool {
             workers.push(Worker::new(id, Arc::clone(&receiver)));
         }
 
-        ThreadPool { 
+        ThreadPool {
             workers,
-            sender: Some(sender),
+            sender,
         }
     }
-
 
     pub fn execute<F>(&self, f: F)
     where
         F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
-
-        self.sender.as_ref().unwrap().send(job).unwrap();
+        self.sender.send(Message::NewJob(job)).unwrap();
     }
 }
 
 impl Drop for ThreadPool {
     fn drop(&mut self) {
-        drop(self.sender.take());
+        println!("Sending terminate message to all workers.");
+        for _ in &self.workers {
+            self.sender.send(Message::Terminate).unwrap();
+        }
 
         for worker in &mut self.workers {
             println!("Shutting down worker {}", worker.id);
@@ -61,21 +67,18 @@ struct Worker {
 }
 
 impl Worker {
-    fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
-        let thread = thread::spawn(move || {
-            loop {
-                let message = receiver.lock().unwrap().recv();
+    fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Message>>>) -> Worker {
+        let thread = thread::spawn(move || loop {
+            let message = receiver.lock().unwrap().recv().unwrap();
 
-                match message {
-                    Ok(job) => {
-                        println!("Worker {id} got a job; executing.");
-
-                        job();
-                    }
-                    Err(_) => {
-                        println!("Worker {id} disconnected; shutting down.");
-                        break;
-                    }
+            match message {
+                Message::NewJob(job) => {
+                    println!("Worker {id} got a job; executing.");
+                    job();
+                }
+                Message::Terminate => {
+                    println!("Worker {id} was told to terminate.");
+                    break;
                 }
             }
         });
