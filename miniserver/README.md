@@ -2,7 +2,7 @@
 
 # MiniServer with ThreadPool in Rust
 
-A simple multithreaded HTTP server in Rust that demonstrates building a custom thread pool and handling TCP connections concurrently.
+A simple, minimal HTTP server that handles incoming requests concurrently using a custom thread pool. It supports basic routing, delays for simulated workloads, and graceful shutdown of worker threads.
 
 ---
 
@@ -12,14 +12,14 @@ A simple multithreaded HTTP server in Rust that demonstrates building a custom t
     * Uses `std::sync::mpsc` for job dispatch.
     * Shares the receiver via `Arc<Mutex<...>>` for safe, concurrent access.
     * Spawns worker threads that block on the queue and execute jobs.
-    * **Graceful shutdown** via a new `Message::Terminate` enum variant, ensuring workers shut down cleanly.
+    * Graceful shutdown via a new `Message::Terminate` enum variant, ensuring workers shut down cleanly.
 * **Robust HTTP handling:**
-    * **Continuous listening** for incoming connections without shutting down.
-    * **`GET /`** → serves `hello.html`
-    * **`GET /sleep`** → waits 5 seconds, then serves `hello.html`
-    * **Other paths** → serves `404.html`
-    * **Handles unsupported HTTP methods** with a `405 Method Not Allowed` response.
-    * **Improved error handling** and a `500 Internal Server Error` for files not found on the server.
+    * Continuous listening for incoming connections without shutting down.
+    * Handles multiple TCP connections concurrently 
+    * `/sleep` → waits 5 seconds, then serves `hello.html`
+    * Other paths → serves `404.html`
+    * Handles unsupported HTTP methods with a `405 Method Not Allowed` response.
+    * Improved error handling and a `500 Internal Server Error` for files not found on the server.  
 
 ---
 
@@ -33,7 +33,7 @@ A simple multithreaded HTTP server in Rust that demonstrates building a custom t
 ├── hello.html      # Example HTML page served at "/"
 ├── 404.html        # Example 404 error page
 └── Cargo.toml
-````
+```
 
 -----
 
@@ -78,18 +78,31 @@ curl -X POST [http://127.0.0.1:7878/](http://127.0.0.1:7878/)
 
 ## 🧵 ThreadPool design
 
-  * `ThreadPool::new(size)`
-      * Creates a pool with `size` workers and an `mpsc::channel` for messages.
-      * The receiver is shared via `Arc<Mutex<...>>`.
-  * `ThreadPool::execute(job)`
-      * Boxes the closure and sends it as a `Message::NewJob` to the channel.
-  * **Workers (threads)**
-      * Block on `receiver.lock().unwrap().recv()` inside a loop.
-      * On receiving `Message::NewJob(job)`: logs and executes the job.
-      * On receiving `Message::Terminate`: prints a message and exits the loop.
-  * **Drop for ThreadPool**
-      * Sends a `Message::Terminate` to every worker.
-      * Iterates over workers and calls `thread.join()` to ensure they have finished executing their last job and have shut down.
+1. **Initialization**  
+   - Enforces `size > 0`  
+   - Spawns `size` workers, each listening on a shared `Receiver<Message>`  
+2. **Job Scheduling**  
+   - `execute` accepts any `FnOnce() + Send + 'static`  
+   - Wraps it in a `Message::NewJob` and sends it over the channel  
+3. **Worker Loop**  
+   - Locks the receiver, waits for a message  
+   - On `NewJob`, prints a log and runs the closure  
+   - On `Terminate`, breaks the loop and ends the thread  
+4. **Graceful Shutdown**  
+   - `Drop` impl sends one `Terminate` per worker  
+   - Joins each worker thread before exiting 
+
+-----
+
+## 🦀 Differences from Rust Book Chapter 20
+
+- The original book reads the first 512 bytes of the request using a fixed-size buffer and matches request prefixes for routing; this implementation uses `BufReader::read_line` to parse only the request line for simplicity and clarity.  
+
+- Rust Book’s example treats any non-`/` or `/sleep` request (including non-GET methods) as a 404; this version explicitly returns `405 Method Not Allowed` for non-GET methods and `500 Internal Server Error` when requested files are missing, improving compliance with HTTP semantics.  
+
+- Routing logic is expanded to validate request lines and provide distinct error responses rather than panicking on invalid input, adding robustness over the original tutorial’s assumptions.  
+
+- The thread pool implementation and graceful shutdown logic closely follow the book’s design, but use Rust’s named format parameters (e.g., `{id}`) for log messages and centralize error handling in `handle_connection` for cleaner code organization.  
 
 -----
 
@@ -106,3 +119,26 @@ curl -X POST [http://127.0.0.1:7878/](http://127.0.0.1:7878/)
 
   * Rust Book, Chapter 20: Building a Multithreaded Web Server
       * [https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html](https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html)
+
+
+<!--
+## Customization & Next Steps
+
+- Adjust thread pool size in `main.rs` based on expected concurrency  
+- Extend routing logic to serve additional files or dynamic content  
+- Implement logging middleware or timeouts on connections  
+- Add support for POST requests and more HTTP headers  
+
+---
+
+## License
+
+This project is licensed under the MIT License.  
+Feel free to copy, modify, and redistribute.  
+
+---
+
+References
+
+Final Project: Building a Multithreaded Web Server - The Rust Programming Language (https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html)
+-->
