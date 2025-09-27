@@ -3,6 +3,7 @@
 use rand::prelude::*;
 use lazy_static::lazy_static;
 
+// Create a static vector containing the squares of numbers from 1 to 200:
 lazy_static! {
     pub static ref SQUARES: Vec<u32> = {
         (1..=200).map(|x| x * x).collect()
@@ -24,12 +25,13 @@ fn main() {
         println!("{}", num);
     }
 
-    // Create a static vector containing the squares of numbers from 1 to 200:
-    for square in SQUARES.iter().take(10) {
-        println!("{}", square);
-    }
-    
-    for square in &SQUARES[190..] {
+    // Generate 10 numbers from the square of 1 ~ 200:
+    let random_squares: Vec<u32> = SQUARES
+        .choose_multiple(&mut rng, 10)
+        .cloned()
+        .collect();
+
+    for square in random_squares {
         println!("{}", square);
     }
 }
