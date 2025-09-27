@@ -2,3 +2,6 @@
 */Cargo.lock
 */.idea/
 testrust/
+**/target/
+**/Cargo.lock
+**/.idea/
