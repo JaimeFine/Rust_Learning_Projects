@@ -6,7 +6,9 @@ This repository contains a collection of Rust-based projects created and modifie
 
 ## Projects
 
-1. Bettergrep
+1. bettergrep
+2. miniserver
+3. miniprojects
 
 > *More projects will be added in the future*
 
