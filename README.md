@@ -9,6 +9,7 @@ This repository contains a collection of Rust-based projects created and modifie
 1. bettergrep
 2. miniserver
 3. miniprojects
+   1. random_number_generator
 
 > *More projects will be added in the future*
 
