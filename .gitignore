@@ -1,6 +1,15 @@
 */target/
 */Cargo.lock
 */.idea/
+*/pkg/
+**.wasm
+**.js
+**.ts
+**.d.ts
+*.wasm
+*.js
+*.ts
+*.d.ts
 testrust/
 **/target/
 **/Cargo.lock
