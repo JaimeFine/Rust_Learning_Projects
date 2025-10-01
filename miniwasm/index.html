@@ -59,10 +59,8 @@
     </div>
 
     <script type="module">
-        // Import the generated module file. 
-        // NOTE: The path is relative to the directory where 'wasm-pack build' was run.
-        // The package name is defined in Cargo.toml (rust-wasm-template).
-        import init, { greet } from './pkg/rust_wasm_template.js';
+        // --- MODIFICATION HERE: Changed import from rust_wasm_template.js to miniwasm.js ---
+        import init, { greet } from './pkg/miniwasm.js';
 
         const nameInput = document.getElementById('nameInput');
         const outputDiv = document.getElementById('output');
