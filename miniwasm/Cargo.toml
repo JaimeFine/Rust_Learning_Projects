@@ -1,0 +1,13 @@
+[package]
+name = "miniwasm"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+# Compile as a C-style static library:
+crate-type = ["cdylib"]
+
+[dependencies]
+# Tool for communicating between Rust and JavaScript/Wasm:
+wasm-bindgen = "0.2.92"
+web-sys = { version = "0.3", features = ["console"] }
