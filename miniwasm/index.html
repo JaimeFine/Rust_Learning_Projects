@@ -16,7 +16,7 @@
 
     <div class="w-full max-w-lg bg-white shadow-2xl rounded-xl p-8 space-y-6">
         <h1 class="text-4xl font-extrabold text-gray-900 text-center">
-            Rust 🤝 WebAssembly
+            🦀 Rust WASM Example 🦀
         </h1>
         <p class="text-center text-gray-600">
             A minimal template to call Rust code from JavaScript via Wasm.
@@ -46,10 +46,6 @@
                 (Click the button after building the project with `wasm-pack build --target web`)
             </p>
         </div>
-
-        <p class="text-xs text-center text-gray-500 mt-6">
-            Make sure to run the build command: <code>wasm-pack build --target web</code>
-        </p>
     </div>
 
     <script type="module">
@@ -89,7 +85,7 @@
         runButton.addEventListener('click', runWasm);
 
         // Optional: Run on load for immediate feedback after successful build
-        // runWasm(); 
+        runWasm();
     </script>
 </body>
 </html>
