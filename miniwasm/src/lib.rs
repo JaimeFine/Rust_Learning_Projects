@@ -7,7 +7,7 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 pub fn greet(name: &str) -> String {
     // Using Rust's standard formatting macro to create the string.
-    let greeting = format!("Hello, {}! This message came from Rust WASM!!!", name);
+    let greeting = format!("Hello, {}! This message came from Rust Wasm!!!", name);
 
     // Log the action in the browser console (Rust side)
     web_sys::console::log_1(&greeting.as_str().into());

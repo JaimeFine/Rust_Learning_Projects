@@ -14,78 +14,96 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-w-lg bg-white shadow-2xl rounded-xl p-8 space-y-6">
-        <h1 class="text-4xl font-extrabold text-gray-900 text-center">
-            🦀 Rust WASM Example 🦀
-        </h1>
-        <p class="text-center text-gray-600">
-            A minimal template to call Rust code from JavaScript via Wasm.
-        </p>
+<div class="w-full max-w-xl bg-white shadow-2xl rounded-xl p-8 space-y-6">
+    <h1 class="text-4xl font-extrabold text-gray-900 text-center">
+        🦀 Rust Wasm Example 🦀
+    </h1>
+    <p class="text-center text-gray-600">
+        A minimal template to call Rust code from JavaScript via Wasm.
+    </p>
 
-        <div class="space-y-2">
-            <label for="nameInput" class="block text-sm font-medium text-gray-700">Your Name:</label>
-            <input 
-                type="text" 
-                id="nameInput" 
-                value="Wasm Enthusiast"
+    <div class="space-y-2">
+        <label for="nameInput" class="block text-sm font-medium text-gray-700">Your Name:</label>
+        <input
+                type="text"
+                id="nameInput"
+                value=""
                 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out shadow-sm"
                 placeholder="Enter your name"
-            />
-        </div>
-
-        <button 
-            id="runWasmButton" 
-            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 ease-in-out transform hover:scale-[1.01] shadow-lg shadow-indigo-500/50 focus:outline-none focus:ring-4 focus:ring-indigo-500/50"
-        >
-            Run Rust `greet()` Function
-        </button>
-
-        <div class="pt-4 border-t border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">Wasm Output:</h2>
-            <p id="output" class="p-4 bg-gray-100 border border-dashed border-gray-300 rounded-lg text-gray-700 min-h-[4rem] flex items-center justify-center text-center italic">
-                (Click the button after building the project with `wasm-pack build --target web`)
-            </p>
-        </div>
+        />
     </div>
 
-    <script type="module">
-        // --- MODIFICATION HERE: Changed import from rust_wasm_template.js to miniwasm.js ---
-        import init, { greet } from './pkg/miniwasm.js';
+    <button
+            id="runWasmButton"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 ease-in-out transform hover:scale-[1.01] shadow-lg shadow-indigo-500/50 focus:outline-none focus:ring-4 focus:ring-indigo-500/50"
+    >
+        Press HERE!!!
+    </button>
 
-        const nameInput = document.getElementById('nameInput');
-        const outputDiv = document.getElementById('output');
-        const runButton = document.getElementById('runWasmButton');
+    <div class="pt-4 border-t border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-800 mb-2">Wasm Output:</h2>
+        <p id="output" class="p-4 bg-gray-100 border border-dashed border-gray-300 rounded-lg text-gray-700 min-h-[4rem] flex items-center justify-center text-center italic">
+            Start typing your name or click the button!
+        </p>
+    </div>
+</div>
 
-        // Function to call the Wasm module
-        async function runWasm() {
+<script type="module">
+    import init, { greet } from './pkg/miniwasm.js';
+
+    const nameInput = document.getElementById('nameInput');
+    const outputDiv = document.getElementById('output');
+    const runButton = document.getElementById('runWasmButton');
+
+    let wasmInitialized = false;
+
+    async function initializeWasm() {
+        if (!wasmInitialized) {
             try {
-                // 1. Initialize the Wasm module. This loads the .wasm file.
                 await init();
-                
-                const name = nameInput.value || "Guest";
-
-                // 2. Call the exposed Rust function
-                const rustMessage = greet(name);
-
-                // 3. Update the DOM
-                outputDiv.classList.remove('italic', 'justify-center');
-                outputDiv.classList.add('font-medium');
-                outputDiv.textContent = rustMessage;
-
-                console.log("Wasm execution successful! Result:", rustMessage);
-
+                wasmInitialized = true;
             } catch (error) {
-                console.error("Failed to load or execute Wasm:", error);
-                outputDiv.textContent = 'ERROR: Could not load Wasm module. Did you run `wasm-pack build --target web` and serve the files?';
+                console.error("Failed to load Wasm module:", error);
+                outputDiv.textContent = 'ERROR: Could not load Wasm module.';
                 outputDiv.classList.add('text-red-600');
+                // Prevent further execution if init fails
+                return false;
             }
         }
+        return true;
+    }
 
-        // Add event listener to the button
-        runButton.addEventListener('click', runWasm);
+    // Function to call the Wasm module
+    async function runWasm() {
+        if (!(await initializeWasm())) return;
 
-        // Optional: Run on load for immediate feedback after successful build
-        runWasm();
-    </script>
+        const name = nameInput.value.trim();
+
+        if (name.length === 0) {
+            // Display the prompt if input is empty
+            outputDiv.textContent = 'Please enter a name to see the Wasm output.';
+            outputDiv.classList.add('italic', 'justify-center');
+            outputDiv.classList.remove('font-medium', 'text-red-600');
+            return;
+        }
+
+        // Call the exposed Rust function
+        const rustMessage = greet(name);
+
+        // Update the DOM
+        outputDiv.classList.remove('italic', 'justify-center', 'text-red-600');
+        outputDiv.classList.add('font-medium');
+        outputDiv.textContent = rustMessage;
+
+        console.log("Wasm execution successful! Result:", rustMessage);
+    }
+
+    // Add event listener to the button (runs Wasm when clicked)
+    runButton.addEventListener('click', runWasm);
+
+    // REMOVED: The input event listener is removed to stop synchronous updates.
+    // nameInput.addEventListener('input', runWasm);
+
+</script>
 </body>
 </html>
