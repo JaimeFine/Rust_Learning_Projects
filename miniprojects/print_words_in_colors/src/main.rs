@@ -30,7 +30,7 @@ fn main() -> Result<(), std::io::Error> {
 
     if !flag {
         loop {
-            println!("Enter the color:");
+            println!("Enter the color in lower-case:");
             io::stdout().flush()?;
             io::stdin().read_line(&mut color);
             let color = color.trim();
@@ -46,9 +46,18 @@ fn main() -> Result<(), std::io::Error> {
             "green" => Colour::Green.paint(&phrase),
             "yellow" => Colour::Yellow.paint(&phrase),
             "blue" => Colour::Blue.paint(&phrase),
+            "black" => Colour::Black.paint(&phrase),
+            "purple" => Colour::Purple.paint(&phrase),
+            "cyan" => Colour::Cyan.paint(&phrase),
+            "white" => Colour::White.paint(&phrase),
             _ => println!(
                 "Sorry this color is not available"
             )
-        }
+        };
+
+        println!("Your output:");
+        println!("{}", output);
     }
+
+    Ok(())
 }
