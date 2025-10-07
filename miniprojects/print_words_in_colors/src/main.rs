@@ -7,14 +7,14 @@ fn main() -> Result<(), std::io::Error> {
 
     let mut flag = false;
     let mut phrase = String::new();
-    let better_phrase = String::new();
+    let mut better_phrase = String::new();
     let mut color = String::new();
 
     loop {
         println!("Enter something:");
         io::stdout().flush()?;
         io::stdin().read_line(&mut phrase)?;
-        let better_phrase = phrase.trim().to_string();
+        better_phrase = phrase.trim().to_string();
 
         if better_phrase.is_empty() {
             println!("No valid color entered! Please try again:");
@@ -33,7 +33,7 @@ fn main() -> Result<(), std::io::Error> {
             println!("Enter the color in lower-case:");
             io::stdout().flush()?;
             io::stdin().read_line(&mut color)?;
-            let color = color.trim().to_string();
+            color = color.trim().to_string();
 
             if color.is_empty() {
                 println!("No valid color entered! Please try again:");
