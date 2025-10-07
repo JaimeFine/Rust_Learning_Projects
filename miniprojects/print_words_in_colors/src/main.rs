@@ -29,13 +29,14 @@ fn main() -> Result<(), std::io::Error> {
     }
 
     if !flag {
+        let mut better_color;
         loop {
             println!("Enter the color in lower-case:");
             io::stdout().flush()?;
             io::stdin().read_line(&mut color)?;
-            color = color.trim().to_string();
+            better_color = color.trim();
 
-            if color.is_empty() {
+            if better_color.is_empty() {
                 println!("No valid color entered! Please try again:");
                 continue;
             } else {
@@ -43,7 +44,7 @@ fn main() -> Result<(), std::io::Error> {
             }
         }
 
-        let output = match color.as_str() {
+        let output = match better_color {
             "red" => Colour::Red.paint(&better_phrase),
             "green" => Colour::Green.paint(&better_phrase),
             "yellow" => Colour::Yellow.paint(&better_phrase),
