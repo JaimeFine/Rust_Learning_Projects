@@ -8,11 +8,20 @@ fn main() {
 
     let mut phrase = String::new();
 
+}
+
+fn read_phrase(
+    phrase: &mut String, color: &mut String
+) -> Result<(), std::io::Error> {
     io::stdin()
         .read_line(&mut phrase)
-        .expect("Failed to read line for some reasons...");
+        .expect("Failed to read line for some reasons...")?;
 
     let phrase = phrase.trim();
+
+    io::stdin()
+        .read_line(&mut color)
+        .expect("Did not get any color instruction, try again")?;
 
     println!("The stuff you entered: {}", phrase);
 }
