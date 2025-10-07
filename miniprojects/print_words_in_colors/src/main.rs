@@ -1,27 +1,32 @@
 use ansi_term::Colour;
-use ansi_term::Style;
-use std::io;
+use std::io::{self, Write};
 
 fn main() {
     println!("Hello!");
-    println!("You can enter a phrase now, if you need help, enter help!");
+    println!("You can enter a something now, if you need help, enter help!");
 
-    let mut phrase = String::new();
+    loop {
+        let mut phrase = String::new();
+        let mut color = String::new();
 
-}
+        println!("Enter the something:");
+        io::stdout.flush()?;
+        io::stdin().read_line(&mut phrase)?;
+        let phrase = phrase.trim();
 
-fn read_phrase(
-    phrase: &mut String, color: &mut String
-) -> Result<(), std::io::Error> {
-    io::stdin()
-        .read_line(&mut phrase)
-        .expect("Failed to read line for some reasons...")?;
+        if phrase.is_empty() {
+            println!("No valid color entered! Please try again:");
+            continue;
+        }
 
-    let phrase = phrase.trim();
+        println!("Enter the color:");
+        io::stdout.flush()?;
+        io::stdin().read_line(&mut color);
+        let color = color.trim();
 
-    io::stdin()
-        .read_line(&mut color)
-        .expect("Did not get any color instruction, try again")?;
-
-    println!("The stuff you entered: {}", phrase);
+        if color.is_empty() {
+            println!("No valid color entered! Please try again:");
+            continue;
+        }
+    }
 }
