@@ -22,6 +22,6 @@ This repository contains projects and code snippets based on the following works
 
 - The Rust Programming Language is licensed under a dual-license of Apache 2.0 and MIT. The book's content is also available under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
 
-- Creative Projects for Rust Programmers is licensed under the MIT License.
+- Rust Cookbook is dual-licensed under the MIT or Apache License 2.0.
 
 My original code contributions are released under the MIT License unless otherwise noted. Each project folder includes its own license and attribution where applicable.
