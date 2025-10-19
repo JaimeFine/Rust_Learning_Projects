@@ -1,0 +1,4 @@
+Rust is funny
+My Rust pals are rusty
+Ferris is rusty
+Let's all get rusty!!!
