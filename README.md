@@ -13,6 +13,7 @@ This repository contains a collection of Rust-based projects created and modifie
 5. miniprojects
    1. random_number_generator
    2. print_words_in_colors
+   3. minicat
 
 > *More projects will be added in the future*
 
